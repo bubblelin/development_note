@@ -29,4 +29,4 @@ mvn install:install-file -Dfile=tgtext-3.0.0.jar -DgroupId=com.eqianbao.tgtext -
 			<artifactId>eqianbao.utils</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-mvn install:install-file -Dfile=tgtext-3.0.0.jar -DgroupId=com.eqianbao.utils -DartifactId=eqianbao.utils -Dversion=2.0.0 -Dpackaging=jar
+mvn install:install-file -Dfile=Oracle_10g_10.2.0.4_JDBC_ojdbc14.jar -DgroupId=com.oracle -DartifactId=ojdbc14 -Dversion=10.2.0.4.0 -Dpackaging=jar
