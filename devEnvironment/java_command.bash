@@ -25,8 +25,8 @@ mvn install:install-file -Dfile=tech-sdk-2.0.0 -DgroupId=com.eqianbao.tech-sdk -
 mvn install:install-file -Dfile=tgtext-3.0.0.jar -DgroupId=com.eqianbao.tgtext -DartifactId=eqianbao.tgtext -Dversion=3.0.0 -Dpackaging=jar
 
 <dependency>
-			<groupId>com.eqianbao.utils</groupId>
-			<artifactId>eqianbao.utils</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-mvn install:install-file -Dfile=Oracle_10g_10.2.0.4_JDBC_ojdbc14.jar -DgroupId=com.oracle -DartifactId=ojdbc14 -Dversion=10.2.0.4.0 -Dpackaging=jar
+    <groupId>com.oracle.jdbc</groupId>
+    <artifactId>ojdbc8</artifactId>
+    <version>12.2.0.1</version>
+</dependency>
+mvn install:install-file -Dfile=ojdbc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=10.2.0.4.0 -Dpackaging=jar
