@@ -1,3 +1,4 @@
+## Assert断言
 Java2在1.4中新增了一个关键字：assert。在程序开发过程中使用它创建一个断言(assertion)，它的
 语法形式有如下所示的两种形式：
 1. assert condition;
@@ -7,3 +8,9 @@ Java2在1.4中新增了一个关键字：assert。在程序开发过程中使用
 2. asser condition:expr;
     这里condition是和上面一样的，这个冒号后跟的是一个表达式，通常用于断言失败后的提示信息，
 说白了，它是一个传到AssertionError构造函数的值，如果断言失败，该值被转化为它对应的字符串，并显示出来。
+
+
+## log4j和slf4j
+>InvocationTargetException: ExceptionInInitializerError: Detected both log4j-over-slf4j.jar AND bound slf4j-log4j12.jar on the class path, preempting StackOverflowError. 
+1. log4j-over-slf4j.jar
+2. slf4j-log4j12.jar
