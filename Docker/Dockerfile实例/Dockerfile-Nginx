@@ -1,0 +1,16 @@
+# Nginx Server
+# VERSION 0.0.1
+
+# 基础镜像
+FROM debian:jessie
+# 维护者信息
+MAINTAINER You Ming <xx@xxx.com>
+
+# 安装Nginx，并清理安装APT时产生的中间文件
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y ca-certificates nginx
+
+# 对外暴露HTTP使用的80端口和HTTPS使用的443端口
+EXPOSE 80 443
+
+# 启动命令，通过-g修改参数配置，让Nginx使用前台运行模式
+CMD ["nginx", "-g", "daemon off;"]

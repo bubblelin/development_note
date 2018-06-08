@@ -1,0 +1,29 @@
+# SSH Server
+# VERSION 0.0.1
+
+# 基础镜像
+FROM ubuntu:16.04
+
+# 维护者信息
+MAINTAINER You Ming <xx@xxx.com>
+
+# 更新软件和安装 openSSH
+RUN apt-get update && apt-get install -y openssh-server
+# 建立OpenSSH的运行目录
+RUN mkdir /var/run/sshd
+
+# 在构建时设置root账户的密码
+# chpasswd可以批量修改用户密码，只需要按照`<user>:<pass>`的格式传入需要修改的密码即可。
+# 在建立容器并SSH连接后，可通过passwd或chpasswd命令修改
+RUN echo 'root:hellossh' | chpasswd
+
+# 打开root账户的密码登录
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+
+# 对外暴露22端口供SSH客户端连接
+EXPOSE 22
+
+
+# 启动命令，携带-D参数使SSHD能在前台运行
+CMD ["/usr/sbin/sshd". "-D"]

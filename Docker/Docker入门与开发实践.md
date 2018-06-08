@@ -145,3 +145,67 @@ $ cat /etc/hosts
 ---
 
 ## SSH服务
+
+
+---
+
+##  网络进阶
+
+#### 网络模型
+
+Docker 的网络部分，CNM（Container Network Model），容器网络模型
+1. Sandbox  ：网络沙盒，容器中隔离网络配置的虚拟环境，每个网络都拥有独立的网络配置。
+2. Endpoint ：端点， 进行网络数据传递的通道入口，依附于网络沙盒之上，实现网络沙盒与外界连接。
+3. Network  ：网络，由一组端点组成，在同一网络中的端点之间可以相互通信，而不同网络之间完全隔离。 
+
+通过 `docker network ls` 获得当前Docker中所有网络：bridge 、 host、 none 三者都是Docker的默认实现。
+1. bridge网络是Docker容器中默认使用的网络。在宿主机的网络中，对应着：docker0
+如果想要改变容器使用的网络，则使用 --network参数修改
+``` shell
+$ sudo docker run -it --name nonenetwork --network none ubuntu /bin/bash
+$ sudo docker network inspect bridge #查看容器网络详细信息
+```
+2. --network none网络表示不使用网络，通过一个无连接的网络让容器与外界网络环境完全隔离。
+3. host网络直接使用宿主机的网络环境，其他与宿主机同在一个子网的机器也能发现容器的存在。
+
+#### 自定义网络
+
+如果没有为容器选定网络，则Docker会将新创建的容器连接到bridge默认网络上。
+
+然而，对于一个由数个容器所组成的一个小模块，须要做到为这几个容器单独分配网络，以隔绝其他网络的连接
+``` shell
+$ sudo docker network create --driver bridge isolated
+```
+--driver 或 -d 参数用来指定网络所基于的网络驱动，可以通过docker network ls 列出创建的网络
+
+
+#### 容器与外部通信
+
+容器数据 -> 容器网络 -> docker0网络 或 其他宿主机上虚拟网卡 -> 转发 -> 其他的宿主机网卡 -> 网络访问
+
+使容器与外部正常通信，保证 IP forward 功能正常启用。
+当Docker daemon 启动时，可以通过--ip-forward 参数控制Docker是否使用 IP forward, 默认配置是开启使用。
+如果此时仍然无法连接外部网络，则检查宿主机系统中的 IP forward是否禁用
+``` shell
+$ sudo sysctl net.ipv4.conf.all.forwarding
+net.ipv4.conf.all.forwarding=0
+
+$ sudo sysctl net.ipv4.conf.all.forwarding=1
+```
+0表示禁用状态
+
+
+实现外部与容器通信的端口映射方案，是基于Iptables（DNAT， 目标地址转换）这个防火墙的，
+当启动容器时，传递的-P或-p参数使容器内的端口映射到宿主机上时，Docker会在Iptables中增加一条通过容器网络连接到容器上的DNAT，在Iptables的规则中：
+``` shell
+$ sudo iptables -t nat -L -n
+
+tatget  prop opt source  destination
+...     ...              ...
+```
+
+宿主机系统可以被分配的端口会出现在 “/proc/sys/net/ipv4/ip_local_port_range”这个文件中，Docker正式从中找出端口进行映射。查看该文件
+``` shell
+$ sudo more /proc/sys/net/ipv4/ip_local_port_range
+范围在32768～67000
+```

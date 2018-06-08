@@ -1,0 +1,21 @@
+# Apache Server
+# VERSION 0.0.1
+
+# 基础镜像
+FROM unbuntu:16.04
+# 维护者信息
+MAINTAINER You Ming <xx@xxx.com>
+
+# 安装Apache，并清理安装APT时产生的中间文件
+RUN apt-get update && apt-get -y install apache2 && apt-get clean
+
+# 开启HTTPS支持
+RUN /usr/sbin/a2ensite default-ssl
+RUN /usr/sbin/a2enmod ssl
+
+# 对外暴露HTTP使用的80端口和HTTPS使用的443端口
+EXPOSE 80
+EXPOSE 443
+
+# 启动命令，通过-D参数切换到前台运行
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
