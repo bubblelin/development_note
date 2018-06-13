@@ -123,7 +123,8 @@ $ sudo docker run -i -t mysql:latest /bin/bash
 
 ## 数据卷与网络
 
-容器连接
+#### 容器连接
+
 设置容器间通信，通过创建容器时使用`--link` 参数实现，只需要指定被连接的容器，而不需要指明被连接的容器端口（不需要指明`-p`或`-P`参数），如此保证被连接容器端口只在容器间，而不被外部访问
 ``` shell
 $ sudo docker run -d --name mysql mysql
@@ -135,6 +136,27 @@ $ cat /etc/hosts
 127.0.0.1 localhost
 172.17.0.2 db 56465451212 mysql
 ...
+```
+
+#### 文件卷标加载
+
+>通过参数 -v 把主机的文件映射到Container中,--rm=true表示这个容器运行结束后自动删除
+
+``` shell
+#把本机的/etc目录挂载到Container里的/opt/etc下面，并且打印Container的/opt/etc目录
+$ docker run --rm=true -i -t --name=ls-volume -v /etc/:/opt/etc/ centos ls /opt/etc
+#挂载后的文件是只读的
+$ docker run -i -t --name=ls-volume -v /etc/:/opt/etc/:ro centos
+```
+
+>挂载已经存在Container中的文件系统，使用 --volumes-from 参数
+
+``` shell
+# 先创建一个Container，它共享/etc目录给其他Container
+$ docker run -i -t --name=etc_share -v /etc/ centos mkdir /etc/my_share 
+  && /bin/sh -C "while true; do echo hello world; sleep 1; done"
+# 然后启动一个ls_etc的Container来挂载并打印etc_share共享的目录
+$ docker run --rm=true -i -t --volumes-from etc_share --name=ls_etc centos ls /etc
 ```
 
 ---
@@ -209,3 +231,8 @@ tatget  prop opt source  destination
 $ sudo more /proc/sys/net/ipv4/ip_local_port_range
 范围在32768～67000
 ```
+
+
+---
+
+
