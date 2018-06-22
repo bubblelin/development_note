@@ -24,21 +24,21 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer{
 ```
 
 DispatcherServlet依赖以下Bean完成初始化：
-HandlerMapping:
+* HandlerMapping:</br>
     处理器映射器，它会根据某些规则将进入容器的请求映射到具体的处理器以及一系列前处理器和后处理器（即处理器拦截器）上。具体的规则视HandlerMapping类的实现不同而不同。其最常用的一个实现支持你在控制器上添加注解，配置请求路径。
-HandlerAdapter:
+* HandlerAdapter:</br>
     处理器适配器，拿到请求所对应的处理器后，适配器将负责去调用该处理器，这使得DispatcherServlet无需关心具体的调用细节。比方说，要调用的是一个基于注解配置的控制器，那么调用前还需要从许多注解中解析出一些相应的信息。因此，HandlerAdapter的主要任务就是对DispatcherServlet屏蔽这些具体的细节。
-HandlerExceptionResolver:
+* HandlerExceptionResolver:</br>
     处理器异常解析器，它负责将捕获的异常映射到不同的视图上去，此外还支持将更复杂的异常处理代码。
-ViewResolver:
+* ViewResolver:</br>
     视图解析器，它负责将一个代表逻辑视图名的字符串映射到实际的视图类型的View上。
-LocaleResolver/LocaleContextResolver:
+* LocaleResolver/LocaleContextResolver:</br>
     地区解析器和地区上下文解析器，负责解析客户端所在地区信息甚至时区信息，为国际化的视图定制提供了支持。
-ThemeResolver:
+* ThemeResolver:</br>
     主题解析器，负责解析Web应用中可用的主题，比如，提供一些个性化定制的布局等。
-MultipartResolver:
+* MultipartResolver:</br>
     解析multi-part的传输请求，比如支持通过HTML表单进行的文件上传等。
-FlashMapManager:
+* FlashMapManager:</br>
     FlashMap管理器，能够存储并取回两次请求之间的FlashMap对象。后者可用于在请求之间床底数据，通常是在请求重定向的情况下使用。
 
 

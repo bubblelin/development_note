@@ -1,17 +1,20 @@
 ## 初识Docker
 
 查看当前系统kernel版本
+
 ``` shell
 $ uname -r
 ```
 
 在APT安装之前，先更新仓库，并确保HTTPS和CA证书模块已安装到系统中，以便定制Docker安装源
+
 ``` shell
 $ sudo apt-get update
 $ sudp apt-get install apt-transport-https ca-certificates
 ```
 
 接着通过apt-key录入安装Docker所需的GPG key
+
 ``` shell
 $ sudo apt-key --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 ```
@@ -20,11 +23,13 @@ $ sudo apt-key --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 5811
 ...
 
 选择符合当前系统的源地址，编写一个源地址文件并写入其中
+
 ``` shell
 /etc/apt/sources.list.d/docker.list
 ```
 
 添加安装源后，，，再次进行apt仓库更新，卸载旧版docker
+
 ``` shell
 $ sudo apt-get update
 $ sudo apt-get purge lxc-docker
@@ -32,6 +37,7 @@ $ apt-cache policy docker-engine
 ```
 
 安装docker
+
 ``` shell
 $ sudo apt-get install docker-engine
 
@@ -45,12 +51,14 @@ $ sudo service docker stat
 > 镜像名称主要分为三部分Namespace、Repository、Tag
 
 获取镜像的详细信息
+
 ``` shell
 $ sudo docker inspect mysql:latest
 $ sudo docker inspect -f {{".Size"}} mysql:latest
 ```
 
 镜像的迁移，`docker save`命令是把镜像写到输出流中，可通过 `-o`或`--output`参数将导出的镜像数据写入到指定的文件
+
 ``` shell
 $ sudo docker save -o mysql.tar mysql:latest
 $ sudo docker save mysql:latest >mysql.tar
@@ -58,17 +66,20 @@ $ sudo docker save -o images.tar mysql:latest mongo:latest
 ```
 
 镜像的导入， `docker load`命令从输入流中读取镜像，可通过 `-i`或`--input`参数将指定的文件传入镜像
+
 ``` shell
 $ sudo docker load -i mysql.tar
 $ sudo docker load <mysql.tar
 ```
 
 镜像仓库登录
+
 ``` shell
 $ sudo docker login -u <username> -p <password> <server>
 ```
 
 部署私有仓库
+
 ``` shell
 $ sudo docker run -d --name private-registry -hostname localhost \
   -v /opt/docker/distribution:/var/lib/registry/docker/registry-v2 \
@@ -82,12 +93,15 @@ $ sudo docker push localhost:5000/youmingdot/redis:latest
 
 使用Nginx反向代理，开启HTTPS安全协议
 1.  首先通过openssl工具生成一份密钥和证书
+
 ``` shell
 $ openssl genrsa -out https.key 4096
 $ openssl req -newkey rsa:4096 -nodes -keyout https.key -x509 -days 3650 \
   -out https.crt -subj "/C=CN/ST=zj/L=hz/O=ymd/OU=localhost"
 ```
+
 2. 在Nginx的主机配置中加入HTTPS配置
+
 ``` shell
 server {
   ssl on;
@@ -96,7 +110,9 @@ server {
   ...
 }
 ```
+
 1. 然后在配置中加入反向代理的配置
+
 ``` shell
 server {
   ...
@@ -115,6 +131,7 @@ server {
 ## 管理和使用容器
 
 运行并进入交互模式，`-t`或`--tty`参数为容器分配伪终端，`-i``--interactive`则打开交互模式
+
 ``` shell
 $ sudo docker run -i -t mysql:latest /bin/bash
 ```
@@ -126,16 +143,20 @@ $ sudo docker run -i -t mysql:latest /bin/bash
 #### 容器连接
 
 设置容器间通信，通过创建容器时使用`--link` 参数实现，只需要指定被连接的容器，而不需要指明被连接的容器端口（不需要指明`-p`或`-P`参数），如此保证被连接容器端口只在容器间，而不被外部访问
+
 ``` shell
 $ sudo docker run -d --name mysql mysql
 $ sudo docker run -d -p 80:80 -p 443:443 --name web --link mysql nginx
 ```
+
 此时可以在`--env`参数设置自定义环境变量，亦可以在容器中使用该命令查看到与容器连接的环境变量信息，除此之外，可以通过查看nginx容器的/etc/hosts文件能看到
+
 ``` shell
 $ cat /etc/hosts
 127.0.0.1 localhost
 172.17.0.2 db 56465451212 mysql
 ...
+
 ```
 
 #### 文件卷标加载
@@ -183,11 +204,14 @@ Docker 的网络部分，CNM（Container Network Model），容器网络模型
 通过 `docker network ls` 获得当前Docker中所有网络：bridge 、 host、 none 三者都是Docker的默认实现。
 1. bridge网络是Docker容器中默认使用的网络。在宿主机的网络中，对应着：docker0
 如果想要改变容器使用的网络，则使用 --network参数修改
+
 ``` shell
 $ sudo docker run -it --name nonenetwork --network none ubuntu /bin/bash
 $ sudo docker network inspect bridge #查看容器网络详细信息
 ```
+
 2. --network none网络表示不使用网络，通过一个无连接的网络让容器与外界网络环境完全隔离。
+
 3. host网络直接使用宿主机的网络环境，其他与宿主机同在一个子网的机器也能发现容器的存在。
 
 #### 自定义网络
@@ -195,9 +219,11 @@ $ sudo docker network inspect bridge #查看容器网络详细信息
 如果没有为容器选定网络，则Docker会将新创建的容器连接到bridge默认网络上。
 
 然而，对于一个由数个容器所组成的一个小模块，须要做到为这几个容器单独分配网络，以隔绝其他网络的连接
+
 ``` shell
 $ sudo docker network create --driver bridge isolated
 ```
+
 --driver 或 -d 参数用来指定网络所基于的网络驱动，可以通过docker network ls 列出创建的网络
 
 
@@ -208,17 +234,20 @@ $ sudo docker network create --driver bridge isolated
 使容器与外部正常通信，保证 IP forward 功能正常启用。
 当Docker daemon 启动时，可以通过--ip-forward 参数控制Docker是否使用 IP forward, 默认配置是开启使用。
 如果此时仍然无法连接外部网络，则检查宿主机系统中的 IP forward是否禁用
+
 ``` shell
 $ sudo sysctl net.ipv4.conf.all.forwarding
 net.ipv4.conf.all.forwarding=0
 
 $ sudo sysctl net.ipv4.conf.all.forwarding=1
 ```
+
 0表示禁用状态
 
 
 实现外部与容器通信的端口映射方案，是基于Iptables（DNAT， 目标地址转换）这个防火墙的，
 当启动容器时，传递的-P或-p参数使容器内的端口映射到宿主机上时，Docker会在Iptables中增加一条通过容器网络连接到容器上的DNAT，在Iptables的规则中：
+
 ``` shell
 $ sudo iptables -t nat -L -n
 
@@ -227,6 +256,7 @@ tatget  prop opt source  destination
 ```
 
 宿主机系统可以被分配的端口会出现在 “/proc/sys/net/ipv4/ip_local_port_range”这个文件中，Docker正式从中找出端口进行映射。查看该文件
+
 ``` shell
 $ sudo more /proc/sys/net/ipv4/ip_local_port_range
 范围在32768～67000
@@ -236,3 +266,13 @@ $ sudo more /proc/sys/net/ipv4/ip_local_port_range
 ---
 
 
+docker run 
+-d 
+--name "nodeCountAccess" 
+-p 8000:8000 
+-v /var/node/docker_node:/var/node/docker_node 
+-v /var/log/pm2:/root/.pm2/logs/ 
+--link redis-server:redis 
+-w /var/node/docker_node/ 
+bubblelin/node_pm2 
+pm2 start app.js
