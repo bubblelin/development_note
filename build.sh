@@ -2,25 +2,16 @@
 
 set +e
 
-echo '>>> Get old container id'
+CNAME="test_development_note"
 
-touch note.log
+docker build -t localhost:5000/development_note:v${BUILD_NUMBER} .
 
-echo '${BUILD_NUMBER}' >> note.log
-echo %BUILD_NUMBER% >> note.log
+docker push localhost:5000/development_note:v${BUILD_NUMBER}
 
-CID=$(docker ps | grep "preview_development_note" | awk '{print $1}')
+docker rm -f $(docker ps -a | grep $CNAME) || true
 
-echo $CID
+docker run --name $CNAME localhost:5000/development_note:v${BUILD_NUMBER}
 
-docker build -t localhost:5000/development_note:%BUILD_NUMBER% .
-
-docker push localhost:5000/development_note:%BUILD_NUMBER%
-
-docker rm -f $(docker ps -a | grep $CID) || true
-
-docker run --name $CID localhost:5000/development_note:%BUILD_NUMBER%
-
-echo '>>> Starting new container: $CID'
+echo '>>> Starting new container: $CNAME'
 
 exit
