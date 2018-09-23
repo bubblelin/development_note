@@ -4,10 +4,10 @@ set +e
 
 echo '>>> Get old container id'
 
-mkdir ./note.log
+touch note.log
 
-echo '${BUILD_NUMBER}' >> ./note.log
-echo %BUILD_NUMBER% >> ./note.log
+echo '${BUILD_NUMBER}' >> note.log
+echo %BUILD_NUMBER% >> note.log
 
 CID=$(docker ps | grep "preview_development_note" | awk '{print $1}')
 
