@@ -3,6 +3,56 @@ HTTP协议
 ### 什么是HTTP协议
 HTTP：超文本传送协议 (HTTP-Hypertext transfer protocol) ，定义了浏览器（即万维网客户进程）怎样向万维网服务器请求万维网文档，以及服务器怎样把文档传送给浏览器。从层次的角度看，HTTP是面向（transaction-oriented)应用层协议，它是万维网上能够可靠地交换文件（包括文本、声音、图像等各种多媒体文件）的重要基础。
 
+### 网络基础TCP/IP
+
+**TCP/IP**是互联网相关的各类协议组的总称。
+
+- 应用层
+
+  FTP, DNS, HTTP协议属于该层
+
+- 传输层
+
+  TCP传输控制协议
+
+  UDP用户数据报协议
+
+- 网络层
+
+  IP协议
+
+  用来处理在网络上流动的数据包。数据包是网络传输的最小的数据单位。
+
+- 链路层（又名网络接口层）
+
+  用来处理连接网络的硬件部分。
+
+![import1](D:\MyDocument\Development_study\development_note\前端\import1.png)
+
+
+
+把数据信息包装起来的做法成为**封装**（encapsulate）
+
+![import2](D:\MyDocument\Development_study\development_note\前端\import2.png)
+
+
+
+**TCP三次握手策略**
+
+TCP标识——SYN和ACK（synchronize和acknowledgement）
+
+> 发送端首先发送一个带SYN标志的数据包给对方。
+>
+> 接收端收到后回传一个带有SYN/ACK标志的数据包以示传达确认信息。
+>
+> 最后发送端在回传一个带有ACK标志的数据包，代表握手结束。
+>
+> 若中断，则重复顺序三次握手。
+
+
+
+![import3](D:\MyDocument\Development_study\development_note\前端\import3.png)
+
 
 
 ### 什么是HTTP的事务（HTTP的工作流程）
@@ -20,15 +70,25 @@ HTTP协议是一个无状态的协议，同一个客户端的这次请求和上�
 
 
 
+### URI和URL
 
-### URL
-统一资源定位符（URL，英语UniformResourceLocator的缩写）也被称为网页地址，是因特网上标准的资源的地址。
-URL的格式由下列三部分组成：
-第一部分是协议（或称为服务方式）；
-第二部分是存有该资源的主机IP地址（有时也包括端口号）；
-第三部分是主机资源的具体地址。，如目录和文件名等。
-第一部分和第二部分之间用“：//”符号隔开，第二部分和第三部分用“/”符号隔开。第一部分和第二部分是不可缺少的，第三部分有时可以省略。
-现在几乎所有的URI都是URL.
+**统一资源标识符**（URI， 英语Uniform Resource Indentifier缩写），RFC定义URI就是由某个协议方案表示的资源的定位标识符。
+
+- Uniform
+- Resource
+- Indentifier
+
+
+
+
+
+**统一资源定位符**（URL，英语Uniform Resource Locator的缩写）也被称为网页地址，是因特网上标准的资源的地址。
+第一部分和第二部分是不可缺少的，第三部分有时可以省略。**
+*现在几乎所有的URI都是URL*。URL的格式由下列三部分组成：
+
+- 第一部分是协议（或称为服务方式），第一部分和第二部分之间用“：//”符号隔开；
+- 第二部分是存有该资源的主机IP地址（有时也包括端口号），第二部分和第三部分用“/”符号隔开；
+- 第三部分是主机资源的具体地址，如目录和文件名等。
 
 
 

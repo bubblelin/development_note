@@ -1,7 +1,7 @@
 ## Spring基础配置
-### 优点
+### 优点（“习惯优于配置”）
 1. 快速构建项目
-2. 对主流开发框架的无配置集成
+2. *对主流开发框架的无配置集成*
 3. 项目可独立运行，无须外部依赖Servlet容器
 4. 提供运行时的应用监控
 5. 极大地提高了开发、部署效率
@@ -12,6 +12,51 @@
 @ComponentScan自动扫描报名下所有使用@Service @Component @Repository @Controller的类，并注册为Bean。
 
 ## SpringBoot核心
+
+### 运作原理
+
+注解@SpringBootApplication是一个组合注解，它的核心功能是由@EnableAutoConfiguration提供：
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@Import({EnableAutoConfigurationImportSelector.class,
+        AutoConfigurationPackages.Registrar.class})
+public @interface EnableAutoConfiguration{
+    Class<?>[] exclude() default{};
+    String[] excludeName() default{};
+}
+```
+
+这里的关键功能是@Import注解导入的配置功能， EnableAutoConfigurationImportSelector使用SpringFactoriesLoader.loadFactoryNames方法来扫描具有META-INF/spring.factories文件的jar包。
+
+打开spring-boot-autoconfigre.jar包的spring.factories文件有AutoConfigration文件，一般都有@ConditionalOnXXX注解。
+
+###### 对于@ConditionalOnWebApplication注解：
+
+```java
+package org.springframework.boot.autoconfigure.condition;
+
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Conditional(OnWebApplicationCondition.class)
+public interface CondititionalOnWebApplication{
+}
+```
+
+该注解使用的条件是OnWebApplicationCondition，这个类有个isWebApplication方法，判断条件：
+
+1. GenericWebApplicationContext是否在类路径中；
+2. 容器里是否有名为session的scope；
+3. 当前容器的Environment是否为StandardServletEnvironment；
+4. 当前的ResourceLoader是否为WebApplicationContext；
+5. 我们需要构造ConditionOutcome类的对象来帮助我们，最终通过ConditionOutcome.isMatch方法返回布尔值来确定条件。
+
+
+
 ### 类型安全的配置（基于properties）
 >SpringBoot提供了基于类型安全的配置方式，通过@ConfigurationProperties将properties属性和一个Bean及其属性关联，从而实现类型安全的配置。
 @SpringBootApplication是SpringBoot的核心注解，它是一个组合注解
