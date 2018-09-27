@@ -6,9 +6,13 @@
 $ uname -r
 ```
 
-在APT安装之前，先更新仓库，并确保HTTPS和CA证书模块已安装到系统中，以便定制Docker安装源
+### Ubuntu安装docker
+
+在APT安装之前，更新国内Ubuntu源，先更新仓库，并确保HTTPS和CA证书模块已安装到系统中，以便定制Docker安装源
 
 ``` shell
+$ /etc/apt/sources.list.d/docker.list
+$ deb http://mirrors.163.com/ubuntu/ trusty main
 $ sudo apt-get update
 $ sudp apt-get install apt-transport-https ca-certificates
 ```
@@ -16,7 +20,7 @@ $ sudp apt-get install apt-transport-https ca-certificates
 接着通过apt-key录入安装Docker所需的GPG key
 
 ``` shell
-$ sudo apt-key --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+$ sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 ```
 
 之后将Docker的安装源提供给apt仓库
@@ -26,6 +30,7 @@ $ sudo apt-key --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 5811
 
 ``` shell
 /etc/apt/sources.list.d/docker.list
+deb http://mirrors.163.com/ubuntu/ trusty main
 ```
 
 添加安装源后，，，再次进行apt仓库更新，卸载旧版docker
@@ -45,6 +50,41 @@ $ sudo service docker stat
 ```
 
 ---
+
+
+
+### Centos安装docker
+
+更新包管理工具yum
+
+```shell
+# yum update
+```
+
+添加仓库
+
+```shell
+# vim /etc/yum.repos.d/ghostcloud.repo
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/$releasever/
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+```
+
+
+
+正式安装
+
+```shell
+# yum install docker-engine=
+
+# service docker start
+
+# systemctl enable docker
+```
+
+
 
 ## 镜像与仓库
 
@@ -184,11 +224,9 @@ $ docker run --rm=true -i -t --volumes-from etc_share --name=ls_etc centos ls /e
 
 ## 制作镜像
 
-
 ---
 
 ## SSH服务
-
 
 ---
 
@@ -261,7 +299,6 @@ tatget  prop opt source  destination
 $ sudo more /proc/sys/net/ipv4/ip_local_port_range
 范围在32768～67000
 ```
-
 
 ---
 

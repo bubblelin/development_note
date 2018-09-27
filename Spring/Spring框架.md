@@ -1,5 +1,7 @@
 ### Spring框架分成多个模块。应用程序可以选择需要的部分。
 
+![img](D:\MyDocument\Development_study\development_note\Spring\spring-overview.png)
+
 - spring-aop: 基于代理的AOP支持
 - spring-aspects: 基于AspectJ的切面
 
