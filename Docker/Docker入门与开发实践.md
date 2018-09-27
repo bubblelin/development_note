@@ -30,7 +30,10 @@ $ sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 
 
 ``` shell
 /etc/apt/sources.list.d/docker.list
-deb http://mirrors.163.com/ubuntu/ trusty main
+Ubuntu Trusty 14.04(LTS)
+deb https://apt.dockerproject.org/repo ubuntu-trusty main
+Ubuntu wily 15.10
+deb https://apt.dockerproject.org/repo ubuntu-wily main
 ```
 
 添加安装源后，，，再次进行apt仓库更新，卸载旧版docker
@@ -44,9 +47,11 @@ $ apt-cache policy docker-engine
 安装docker
 
 ``` shell
+$ apt-get install linux-image-extra-$(uname -r)
+
 $ sudo apt-get install docker-engine
 
-$ sudo service docker stat
+$ sudo service docker start
 ```
 
 ---
