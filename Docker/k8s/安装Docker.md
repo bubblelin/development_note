@@ -31,7 +31,8 @@
 
    ```shell
    $ sudo sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-   ```
+   
+   $ sudo systemctl stop firewalld.service && sudo systemctl disable firewalld.service
 
 7. 关闭防火墙(可选)或者放行相应端口
 
