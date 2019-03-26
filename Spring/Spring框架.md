@@ -153,4 +153,16 @@ Spring提供了一个SpringJUnit4ClassRunner类，提供了Spring TestContext Fr
 1. 通过@ContextConfiguration来配置Application Context；
 2. 通过@ActiveProfiles确定获得profile
 
-### 
+### Spring源码解析
+
+#### Spring中的后置处理器BeanPostProcessor
+```java
+public interface BeanPostProcessor {
+    //实例化、依赖注入完毕，在调用显示的初始化之前完成一些定制的初始化任务，
+    //显示的初始化方法，(例如：配置文件中bean标签添加init-method属性指定Java类中初始化方法、
+    //@PostConstruct注解指定初始化方法，Java类实现InitailztingBean接口)
+    Object postProcessorBeforeInitialization(Object bean, String beanName) throws BeansException;
+    //实例化、依赖注入、初始化完毕时执行
+    Object postProcessorAfterInitialization(Object bean, String beanName) throws BeansException;
+}
+```
