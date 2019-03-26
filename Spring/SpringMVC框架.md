@@ -119,7 +119,7 @@ public void findPet(
 @MatrixVariable: URI路径段中的键值。
 @RequestParam: Servlet请求中指定的参数。
 @RequestHeader: Servlet请求中指定的HTTP请求头的值。
-@RequestBody: HTTP请求体的存取。通过HttpMessageConverter转换成参数声明的类型。
+@RequestBody: HTTP请求体的存取。该注解常用来处理Content-Type: 不可以接受是`application/x-www-form-urlencoded`编码的内容，例如application/json, application/xml等通过HttpMessageConverter转换成参数声明的类型。
     请求体到方法参数的转换由HttpMessageConverter完成。
     RequestMappingHandlerAdapter提供一下几种默认的HttpMessageConverter支持：
         ByteArrayHttpMessageConverter： 用以转换字节数组。
