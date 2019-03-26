@@ -215,6 +215,49 @@ scheduler            Healthy   ok
 for node_ip in ${NODE_IPS[@]}
   do
     echo ">>> ${node_ip}"
-    ssh root@${node_ip} "systemctl daemon-reload && systemctl enable flanneld && systemctl restart flanneld"
+    ssh ${node_ip} "ping -c 1 172.30.102.0"
+    ssh ${node_ip} "ping -c 1 172.30.31.0"
+    ssh ${node_ip} "ping -c 1 172.30.23.0"
   done
+```
+
+``` shell
+cat > haproxy.cfg <<EOF
+global
+    log /dev/log    local0
+    log /dev/log    local1 notice
+    chroot /var/lib/haproxy
+    stats socket /var/run/haproxy-admin.sock mode 660 level admin
+    stats timeout 30s
+    user haproxy
+    group haproxy
+    daemon
+    nbproc 1
+
+defaults
+    log     global
+    timeout connect 5000
+    timeout client  10m
+    timeout server  10m
+
+listen  admin_stats
+    bind 0.0.0.0:10080
+    mode http
+    log 127.0.0.1 local0 err
+    stats refresh 30s
+    stats uri /status
+    stats realm welcome login\ Haproxy
+    stats auth admin:123456
+    stats hide-version
+    stats admin if TRUE
+
+listen kube-master
+    bind 0.0.0.0:8443
+    mode tcp
+    option tcplog
+    balance source
+    server 192.168.1.104 192.168.1.104:6443 check inter 2000 fall 2 rise 2 weight 1
+    server 192.168.1.105 192.168.1.105:6443 check inter 2000 fall 2 rise 2 weight 1
+    server 192.168.1.106 192.168.1.106:6443 check inter 2000 fall 2 rise 2 weight 1
+EOF
 ```

@@ -18,6 +18,16 @@
 
 - after iterator is created, modification the map, the iterator will throw ConcurrentModificationException
 
+### 总结
+
+```java
+初始化HashMap不申请内存空间，在调用存放元素的put方法才申请空间；
+如果loadFactor越大，对空间利用更充分，后果是查找效率的降低；反之，散列表将稀疏，空间浪费。
+h&(length-1)，作用除了取模运算外，还有个责任是：均匀分布table数据和充分利用空间
+HashMap其实是一个Entry数组，Entry对象中包含了键和值，其中next对象是用来解决hash冲突
+Entry数组中存放的链表，使用“头插入法”
+```
+
 
 
 #### HashMap的成员变量
