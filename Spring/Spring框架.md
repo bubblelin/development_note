@@ -166,3 +166,9 @@ public interface BeanPostProcessor {
     Object postProcessorAfterInitialization(Object bean, String beanName) throws BeansException;
 }
 ```
+
+
+
+#### 定时任务
+
+Spring Schedule是spring自带的任务框架，缺点：同一个task，如果前一个还没跑完后面一个就不会触发，不同的task也不能同时运行。因为scheduler的默认线程数为1，配置pool-size为2的话，会导致同一个task前一个还没跑完后面又被触发的问题，不支持集群等。
